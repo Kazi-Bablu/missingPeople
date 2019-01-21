@@ -14,13 +14,40 @@
 Route::get('/', function () {
     return view('welcome');
 });
-
+/**
+ * division route
+ */
 Route::get('/division/create','DivisionController@create');
 Route::post('/division/create','DivisionController@store');
 Route::get('/division/view','DivisionController@index');
 Route::get('/division/{id}/edit','DivisionController@edit');
 Route::post('/division/{id}/update','DivisionController@update');
 Route::get('/division/{id}/delete','DivisionController@destroy');
+
+/**
+ * district route
+ */
+Route::get('/district/create','DistrictController@create');
+Route::post('/district/create','DistrictController@store');
+Route::get('/district/view','DistrictController@index');
+Route::get('/district/{id}/edit','DistrictController@edit');
+Route::post('/district/{id}/update','DistrictController@update');
+Route::get('/district/{id}/delete','DistrictController@destroy');
+
+/**
+ * upazila route
+ */
+Route::get('/upazila/create','UpazilaController@create');
+Route::post('/upazila/create','UpazilaController@store');
+Route::get('/upazila/view','UpazilaController@index');
+Route::get('/upazila/{id}/edit','UpazilaController@edit');
+Route::post('/upazila/{id}/update','UpazilaController@update');
+Route::get('/upazila/{id}/delete','UpazilaController@destroy');
+/**
+ * missing route
+ */
+Route::get('/divisionSelectedForDistrictName','MissingPeopleController@divisionSelectedForDistrictName');
+Route::get('/missing/people/create','MissingPeopleController@create');
 
 Auth::routes();
 Route::get('/verifyemail/{token}', 'Auth\RegisterController@verify');

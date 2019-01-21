@@ -8,7 +8,7 @@
 
     @if(Session::has('message'))
         <div class="col-m-10">
-            <div  class="alert alert-success" role="alert">
+            <div class="alert alert-success" role="alert">
                 {{session::get('message')}}
             </div>
         </div>
@@ -33,7 +33,8 @@
                         <div class="col-md-6 col-md-offset-3">
                             <div class="form-group {{$errors->has('division_name')?'has-error':''}}">
                                 <label>Division Name</label>
-                                <input type="text" name="division_name" class="form-control" value="{{old('division_name')}}">
+                                <input type="text" name="division_name" class="form-control"
+                                       value="{{old('division_name')}}">
                                 <p class="help-block">{{$errors->first('division_name')}}</p>
                             </div>
 
@@ -43,7 +44,8 @@
                                 <button type="reset" value="Reset" class="btn btn-warning pull-left"><i
                                             class="fa fa-eraser"></i> Clear
                                 </button>
-                                <button type="submit" class="btn btn-primary pull-right"><i class="fa fa-plus"></i>Add Division
+                                <button type="submit" class="btn btn-primary pull-right"><i class="fa fa-plus"></i>Add
+                                    Division
                                 </button>
                             </div>
                         </div>

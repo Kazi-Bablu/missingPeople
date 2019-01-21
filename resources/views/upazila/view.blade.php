@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    view Division
+    view District
 @endsection
 @section('message')
     @if(Session::has('message'))
@@ -14,31 +14,33 @@
 @section('content')
     <div class="col-md-8 col-md-offset-2">
         <div class="btn-group pull-right">
-            <a href="{{url('/division/create')}}" class="btn btn-primary btn-flat"><i class="fa fa-plus"></i>
-                Add Division</a>
+            <a href="{{url('/upazila/create')}}" class="btn btn-primary btn-flat"><i class="fa fa-plus"></i>
+                Add Upazila</a>
         </div>
         <br>
         <br>
         <br>
-        <h2>View Division</h2>
+        <h2>View Upazila</h2>
         <table class="table table-bordered">
             <tr class="success">
                 <th>ID</th>
                 <th>Division Name</th>
+                <th>District Name</th>
 
                 <th>Action</th>
             </tr>
-            @foreach($divisions as $division)
+            @foreach($upazilas as $upazila)
                 <tr>
-                    <td>{{$division->id}}</td>
-                    <td>{{$division->division_name}}</td>
+                    <td>{{$upazila->id}}</td>
+                    <td>{{$upazila->district_name}}</td>
+                    <td>{{$upazila->upazila_name}}</td>
                     <td>
                         <div class="btn btn-default">
-                            <a href="{{ url('/division',[$division->id,'edit']) }}"><i class="fas fa-edit"></i> Edit</a>
+                            <a href="{{ url('/upazila',[$upazila->id,'edit']) }}"><i class="fas fa-edit"></i> Edit</a>
                         </div>
 
                         <div class="btn btn-danger">
-                            <a class="delete_link" href="{{ url('/division',[$division->id,'delete']) }}"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
+                            <a class="delete_link" href="{{ url('/upazila',[$upazila->id,'delete']) }}"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
                         </div>
                     </td>
 
@@ -46,7 +48,7 @@
             @endforeach
 
         </table>
-        {{ $divisions->render() }}
+        {{ $upazilas->render() }}
     </div>
 
 @endsection

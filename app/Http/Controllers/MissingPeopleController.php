@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\District;
 use App\Division;
+use App\MissingPeople;
+use App\Upazila;
 use Illuminate\Http\Request;
+use Session;
 
 class MissingPeopleController extends Controller
 {
@@ -26,7 +29,9 @@ class MissingPeopleController extends Controller
     public function create()
     {
         $divisions = Division::all();
-        return view('missingPeople.create', compact('divisions'));
+        $districts = District::all();
+        $upazilas = Upazila::all();
+        return view('missingPeople.create', compact('divisions', 'districts', 'upazilas'));
     }
 
     /**
@@ -37,7 +42,49 @@ class MissingPeopleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+       // dd($request->all());
+//        $this->validate($request, [
+//            'missing_person_name' => 'required',
+//            'missing_person_age' => 'required',
+//            'contact_number' => 'required',
+//            'missing_date' => 'required',
+//            'division_id' => 'required',
+//            'district_id' => 'required',
+//            'upazila_id' => 'required',
+//            'missing_person_description' => 'required',
+//            'missing_image' => 'required',
+//        ]);
+
+        $missing = new MissingPeople();
+        $missing->missing_person_name = $request->missing_person_name;
+        $missing->missing_person_age = $request->missing_person_age;
+        $missing->contact_number = $request->contact_number;
+        $missing->missing_date = $request->missing_date;
+        $missing->division_id = $request->division_id;
+        $missing->district_id = $request->district_id;
+        $missing->upazila_id = $request->upazila_id;
+        $missing->missing_person_description = $request->missing_person_description;
+        //$missing->missing_image = $request->missing_image;
+        $missing->save();
+
+
+
+
+        $img_nid = $request->file('missing_image');
+      //  if ($img_nid) {
+             $missingById = MissingPeople::find($missing->id);
+            // Image upload
+            $img_nid_extension = $img_nid->clientExtension();
+            $img_nid_name = 'customer_nid_' . $missing->id . '.' . $img_nid_extension;
+            $upload_path = 'public/' . $missing->id . '/';
+            $img_nid->move($upload_path, $img_nid_name);
+            $img_nid_url = $upload_path . $img_nid_name;
+            $missingById->missing_image = $img_nid_url;
+            $missingById->save();
+   //     }
+
+        Session::flash('message','Missing add successfully!');
+        return redirect()->back();
     }
 
     /**
@@ -89,8 +136,8 @@ class MissingPeopleController extends Controller
     {
         $districtById = District::where('division_id', $request->division_id)
             ->select(
-                'id',
-                'district_name'
+                'districts.id',
+                'districts.district_name'
             )->get();
 
         if (count($districtById) > 0) {

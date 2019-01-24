@@ -46,9 +46,11 @@ Route::get('/upazila/{id}/delete','UpazilaController@destroy');
 /**
  * missing route
  */
-//Route::get('/divisionSelectedForDistrictName','MissingPeopleController@divisionSelectedForDistrictName');
+Route::get('divisionSelectedForDistrictName','MissingPeopleController@divisionSelectedForDistrictName');
+Route::get('districtSelectedForUpazilaName','MissingPeopleController@districtSelectedForUpazilaName');
 Route::get('/missing/people/create','MissingPeopleController@create');
 Route::post('/missing/people/create','MissingPeopleController@store');
+Route::get('/missing/people/view','MissingPeopleController@index');
 
 Auth::routes();
 Route::get('/verifyemail/{token}', 'Auth\RegisterController@verify');

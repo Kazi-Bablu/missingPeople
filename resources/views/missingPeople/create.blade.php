@@ -29,8 +29,9 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="col-md-12">
-                        {!! Form::open(['id'=>'form','url'=> '/missing/people/create']) !!}
-                        <div class="col-md-6 col-md-offset-3">
+                        {{--<img src="{{ asset('storage/images/'.$query->missing_image) }}"--}}
+                        {!! Form::open(['id'=>'form','url'=> '/missing/people/create','files'=>'true']) !!}
+                        <div class="col-md-6">
                             <div class="form-group {{$errors->has('missing_person_name')?'has-error':''}}">
                                 <label>Missing Person Name</label>
                                 <input type="text" name="missing_person_name" class="form-control"
@@ -50,13 +51,22 @@
                                        value="{{old('contact_number')}}">
                                 <p class="help-block">{{$errors->first('contact_number')}}</p>
                             </div>
-
                             <div class="form-group {{$errors->has('missing_date')?'has-error':''}}">
                                 <label>Missing Date</label>
                                 <input type="datetime-local" name="missing_date" class="form-control"
                                        value="{{old('missing_date')}}">
                                 <p class="help-block">{{$errors->first('missing_date')}}</p>
                             </div>
+                            <div class="form-group {{$errors->has('missing_person_description')?'has-error':''}}">
+                                <label>Description</label>
+                                <textarea name="missing_person_description" class="form-control"
+                                          rows="5">{{old('missing_person_description')}}</textarea>
+                                <p class="help-block">{{$errors->first('missing_person_description')}}</p>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+
 
                             <div class="form-group {{$errors->has('division_id')?'has-error':''}}">
                                 <label>Division Name</label>
@@ -83,14 +93,8 @@
                                 <select name="district_id" class="form-control selectpicker"
                                         data-live-search="true"
                                         data-size="6"
+                                        onchange="districtSelectedForUpazilaName(this.value)"
                                         title="Select District">
-                                    @if(count($districts)>0)
-                                        @foreach($districts as $district)
-                                            <option value="{!! $district->id !!}">{!! $district->district_name !!}</option>
-                                        @endforeach
-                                    @else
-                                        <option value="">No district found.</option>
-                                    @endif
 
                                 </select>
                                 <p class="help-block">{{$errors->first('district_id')}}</p>
@@ -104,31 +108,13 @@
                                         data-size="6"
                                         title="Select upazila">
 
-                                    @if(count($upazilas)>0)
-                                        @foreach($upazilas as $upazila)
-                                            <option value="{!! $upazila->id !!}">{!! $upazila->upazila_name !!}</option>
-                                        @endforeach
-                                    @else
-                                        <option value="">No upazila found.</option>
-                                    @endif
 
                                 </select>
                                 <p class="help-block">{{$errors->first('upazila_id')}}</p>
                             </div>
 
-                            <div class="form-group {{$errors->has('missing_person_description')?'has-error':''}}">
-                                <label>Description</label>
-                                <textarea name="missing_person_description" class="form-control"
-                                          rows="5">{{old('missing_person_description')}}</textarea>
-                                <p class="help-block">{{$errors->first('missing_person_description')}}</p>
-                            </div>
 
-                            {{--<div class="form-group {{$errors->has('missing_image')?'has-error':''}}">--}}
-                                {{--<label for="file">Image</label>--}}
-                                {{--<input type="file" data-show-preview="false" data-show-upload="false" name="missing_image"--}}
-                                       {{--class="file" id="file"/>--}}
-                                {{--<p class="help-block">{{$errors->first('missing_image')}}</p>--}}
-                            {{--</div>--}}
+
 
                             <div class="form-group {{$errors->has('missing_image')?'has-error':''}}">
                                 <label for="file">Image</label>
@@ -167,28 +153,51 @@
 
         });
 
-        {{--function divisionSelectedForDistrictName(division_id) {--}}
-            {{--//console.log(division_id);--}}
-            {{--$.ajax({--}}
-                {{--accept: 'application/json',--}}
-                {{--url: '{{url('/divisionSelectedForDistrictName')}}',--}}
-                {{--type: 'get',--}}
-                {{--data: {--}}
-                    {{--'division_id': division_id,--}}
-                {{--},--}}
-                {{--success: function (data) {--}}
-                    {{--$('select[name=district_id]').html(data);--}}
-                    {{--$('select[name=district_id]').selectpicker('refresh');--}}
-                {{--},--}}
-                {{--error: function (err) {--}}
-                    {{--$('select[name=district_id]').html('<option value="">Failed to retrieve data.</option>');--}}
-                    {{--$('select[name=district_id]').selectpicker('refresh');--}}
-                {{--}--}}
-            {{--});--}}
-        {{--}--}}
+        function divisionSelectedForDistrictName(division_id) {
+            //console.log(division_id);
+            $.ajax({
+                accept: 'application/json',
+                url: '{{url('/divisionSelectedForDistrictName')}}',
+                type: 'get',
+                data: {
+                    'division_id': division_id,
+                },
+                success: function (data) {
+                    $('select[name=district_id]').html(data);
+                    $('select[name=district_id]').selectpicker('refresh');
+                },
+                error: function (err) {
+                    $('select[name=district_id]').html('<option value="">Failed to retrieve data.</option>');
+                    $('select[name=district_id]').selectpicker('refresh');
+                }
+            });
+        }
 
-        // function divisionSelectedForDistrictName(division_id){
-        //     console.log(division_id);
-        // }
+        function districtSelectedForUpazilaName(district_id)
+        {
+            $.ajax({
+                accept: 'application/json',
+                url: '{{url('/districtSelectedForUpazilaName')}}',
+                type: 'get',
+                data: {
+                    'district_id': district_id,
+                },
+                success: function (data) {
+                    $('select[name=upazila_id]').html(data);
+                    $('select[name=upazila_id]').selectpicker('refresh');
+                },
+                error: function (err) {
+                    $('select[name=upazila_id]').html('<option value="">Failed to retrieve data.</option>');
+                    $('select[name=upazila_id]').selectpicker('refresh');
+                }
+            });
+        }
     </script>
+    @if(count($errors) > 0)
+        <script type="text/javascript">
+            $('select[name=division_id]').selectpicker('val', '{{old('division_id')}}');
+            $('select[name=district_id]').selectpicker('val', '{{old('district_id')}}');
+            $('select[name=upazila_id]').selectpicker('val', '{{old('upazila_id')}}');
+        </script>
+    @endif
 @endsection

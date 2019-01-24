@@ -18,7 +18,46 @@ class MissingPeopleController extends Controller
      */
     public function index()
     {
-        //
+        if (auth()->user()->user_role == 'Admin') {
+            $missingPeoples = MissingPeople::join('users', 'users.id', 'missing_peoples.created_by')
+                ->join('divisions', 'divisions.id', 'missing_peoples.division_id')
+                ->join('districts', 'districts.id', 'missing_peoples.district_id')
+                ->join('upazilas', 'upazilas.id', 'missing_peoples.upazila_id')
+                ->select('missing_peoples.id',
+                    'missing_peoples.missing_image',
+                    'missing_peoples.missing_person_name',
+                    'missing_peoples.missing_person_age',
+                    'missing_peoples.contact_number',
+                    'missing_peoples.missing_date',
+                    'divisions.division_name',
+                    'districts.district_name',
+                    'upazilas.upazila_name',
+                    'missing_peoples.missing_person_description',
+                    'users.name'
+                )->paginate(10);
+            return view('missingPeople.view', compact('missingPeoples'));
+        } else {
+            $missingPeoples = MissingPeople::join('users', 'users.id', 'missing_peoples.created_by')
+                ->join('divisions', 'divisions.id', 'missing_peoples.division_id')
+                ->join('districts', 'districts.id', 'missing_peoples.district_id')
+                ->join('upazilas', 'upazilas.id', 'missing_peoples.upazila_id')
+                ->where('missing_peoples.created_by', auth()->user()->id())
+                ->select(
+                    'missing_peoples.id',
+                    'missing_peoples.missing_image',
+                    'missing_peoples.missing_person_name',
+                    'missing_peoples.missing_person_age',
+                    'missing_peoples.contact_number',
+                    'missing_peoples.missing_date',
+                    'divisions.division_name',
+                    'districts.district_name',
+                    'upazilas.upazila_name',
+                    'missing_peoples.missing_person_description',
+                    'users.name'
+                )->paginate(10);
+            return view('missingPeople.view', compact('missingPeoples'));
+        }
+
     }
 
     /**
@@ -29,9 +68,7 @@ class MissingPeopleController extends Controller
     public function create()
     {
         $divisions = Division::all();
-        $districts = District::all();
-        $upazilas = Upazila::all();
-        return view('missingPeople.create', compact('divisions', 'districts', 'upazilas'));
+        return view('missingPeople.create', compact('divisions'));
     }
 
     /**
@@ -42,18 +79,18 @@ class MissingPeopleController extends Controller
      */
     public function store(Request $request)
     {
-       // dd($request->all());
-//        $this->validate($request, [
-//            'missing_person_name' => 'required',
-//            'missing_person_age' => 'required',
-//            'contact_number' => 'required',
-//            'missing_date' => 'required',
-//            'division_id' => 'required',
-//            'district_id' => 'required',
-//            'upazila_id' => 'required',
-//            'missing_person_description' => 'required',
-//            'missing_image' => 'required',
-//        ]);
+        //    dd($request->all());
+        $this->validate($request, [
+            'missing_person_name' => 'required',
+            'missing_person_age' => 'required',
+            'contact_number' => 'required',
+            'missing_date' => 'required',
+            'division_id' => 'required',
+            'district_id' => 'required',
+            'upazila_id' => 'required',
+            'missing_person_description' => 'required',
+            'missing_image' => 'required',
+        ]);
 
         $missing = new MissingPeople();
         $missing->missing_person_name = $request->missing_person_name;
@@ -64,26 +101,17 @@ class MissingPeopleController extends Controller
         $missing->district_id = $request->district_id;
         $missing->upazila_id = $request->upazila_id;
         $missing->missing_person_description = $request->missing_person_description;
-        //$missing->missing_image = $request->missing_image;
+        $missing->created_by = auth()->id();
+
+        if ($request->hasFile('missing_image')) {
+            $img_nid = $request->file('missing_image');
+            $filename = time() . "." . $img_nid->getClientOriginalExtension();
+            $path = public_path('storage/images/');
+            $img_nid->move($path, $filename);
+            $missing->missing_image = $filename;
+        }
         $missing->save();
-
-
-
-
-        $img_nid = $request->file('missing_image');
-      //  if ($img_nid) {
-             $missingById = MissingPeople::find($missing->id);
-            // Image upload
-            $img_nid_extension = $img_nid->clientExtension();
-            $img_nid_name = 'customer_nid_' . $missing->id . '.' . $img_nid_extension;
-            $upload_path = 'public/' . $missing->id . '/';
-            $img_nid->move($upload_path, $img_nid_name);
-            $img_nid_url = $upload_path . $img_nid_name;
-            $missingById->missing_image = $img_nid_url;
-            $missingById->save();
-   //     }
-
-        Session::flash('message','Missing add successfully!');
+        Session::flash('message', 'Missing add successfully!');
         return redirect()->back();
     }
 
@@ -146,6 +174,22 @@ class MissingPeopleController extends Controller
             }
         } else {
             echo '<option value="">No district found.</option>';
+        }
+    }
+
+    public function districtSelectedForUpazilaName(Request $request)
+    {
+        $upazilaById = Upazila::where('district_id', $request->district_id)
+            ->select(
+                'id',
+                'upazila_name'
+            )->get();
+        if (count($upazilaById) > 0) {
+            foreach ($upazilaById as $upazila) {
+                echo '<option value="' . $upazila->id . '">' . $upazila->upazila_name . '</option>';
+            }
+        } else {
+            echo '<option value="">No upazila found.</option>';
         }
     }
 }

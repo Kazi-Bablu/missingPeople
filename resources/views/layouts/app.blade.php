@@ -55,6 +55,8 @@
                         {{--<li><a href="{{ route('login') }}">Login</a></li>--}}
                         {{--<li><a href="{{ route('register') }}">Register</a></li>--}}
                     @else
+                        <li><a href="{{url('/home')}}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                        </li>
                         @if(auth()->user()->user_role =='Admin')
                             <li><a href="{{url('/division/create')}}"><i class="fas fa-plus-square"></i> Add
                                     Division</a></li>
@@ -99,7 +101,7 @@
     @yield('message')
     @yield('content')
 
-    @yield('js ')
+
     {{--@include('asset.js')--}}
 </div>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -109,5 +111,6 @@
 <script type="text/javascript">
 
 </script>
+@yield('js')
 </body>
 </html>

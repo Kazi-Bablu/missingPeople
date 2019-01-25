@@ -54,13 +54,13 @@
                         <td>{{$missingPeople->name}}</td>
                         <td>
                             <div class="btn btn-default">
-                                <a href="{{ url('/missing/people/',[$missingPeople->id,'edit']) }}"><i
+                                <a href="{{ url('/missing/people',[$missingPeople->id,'edit']) }}"><i
                                             class="fas fa-edit"></i> Edit</a>
                             </div>
 
                             <div class="btn btn-danger">
                                 <a class="delete_link"
-                                   href="{{ url('/missing/people/',[$missingPeople->id,'delete']) }}"><i
+                                   href="{{ url('/missing/people',[$missingPeople->id,'delete']) }}"><i
                                             class="fa fa-trash" aria-hidden="true"></i> Delete</a>
                             </div>
                         </td>

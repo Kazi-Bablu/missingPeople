@@ -134,7 +134,10 @@ class MissingPeopleController extends Controller
      */
     public function edit($id)
     {
-        //
+        $divisions=Division::all();
+        $missingById=MissingPeople::find($id);
+        return view('missingPeople.edit',compact('divisions','missingById'));
+
     }
 
     /**
@@ -146,7 +149,39 @@ class MissingPeopleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'missing_person_name' => 'required',
+            'missing_person_age' => 'required',
+            'contact_number' => 'required',
+            'missing_date' => 'required',
+            'division_id' => 'required',
+            'district_id' => 'required',
+            'upazila_id' => 'required',
+            'missing_person_description' => 'required',
+            'missing_image' => 'required',
+        ]);
+
+        $missingById = MissingPeople::find($id);
+        $missingById->missing_person_name = $request->missing_person_name;
+        $missingById->missing_person_age = $request->missing_person_age;
+        $missingById->contact_number = $request->contact_number;
+        $missingById->missing_date = $request->missing_date;
+        $missingById->division_id = $request->division_id;
+        $missingById->district_id = $request->district_id;
+        $missingById->upazila_id = $request->upazila_id;
+        $missingById->missing_person_description = $request->missing_person_description;
+        $missingById->created_by = auth()->id();
+
+        if ($request->hasFile('missing_image')) {
+            $img_nid = $request->file('missing_image');
+            $filename = time() . "." . $img_nid->getClientOriginalExtension();
+            $path = public_path('storage/images/');
+            $img_nid->move($path, $filename);
+            $missingById->missing_image = $filename;
+        }
+        $missingById->save();
+        Session::flash('message', 'Missing update successfully!');
+        return redirect('/missing/people/view');
     }
 
     /**
@@ -157,7 +192,11 @@ class MissingPeopleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $missingById = MissingPeople::find($id);
+        $missingById->delete();
+        Session::flash('message', 'Missing delete successfully!');
+        return redirect('/missing/people/view');
+
     }
 
     public function divisionSelectedForDistrictName(Request $request)

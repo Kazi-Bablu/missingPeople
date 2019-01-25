@@ -51,6 +51,9 @@ Route::get('districtSelectedForUpazilaName','MissingPeopleController@districtSel
 Route::get('/missing/people/create','MissingPeopleController@create');
 Route::post('/missing/people/create','MissingPeopleController@store');
 Route::get('/missing/people/view','MissingPeopleController@index');
+Route::get('/missing/people/{id}/edit','MissingPeopleController@edit');
+Route::post('/missing/people/{id}/update','MissingPeopleController@update');
+Route::get('/missing/people/{id}/delete','MissingPeopleController@destroy');
 
 Auth::routes();
 Route::get('/verifyemail/{token}', 'Auth\RegisterController@verify');

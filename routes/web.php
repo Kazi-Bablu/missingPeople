@@ -55,6 +55,13 @@ Route::get('/missing/people/{id}/edit','MissingPeopleController@edit');
 Route::post('/missing/people/{id}/update','MissingPeopleController@update');
 Route::get('/missing/people/{id}/delete','MissingPeopleController@destroy');
 
+/*search route*/
+Route::get('/index/page/search','IndexSearchController@indexSearch');
+/*missing people list route*/
+Route::get('/missing/list','MissingPeopleListController@index');
+//Route::get('/missing/list/view','MissingPeopleListController@missingListSearch');
+Route::get('/missing/list/search','MissingPeopleListController@missingListSearch');
+
 Auth::routes();
 Route::get('/verifyemail/{token}', 'Auth\RegisterController@verify');
 Route::get('/home', 'HomeController@index')->name('home');

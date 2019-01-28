@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\District;
 use App\Division;
+use App\Mail\MissingMailToNearestDistrict;
 use App\MissingPeople;
 use App\Upazila;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Session;
 
 class MissingPeopleController extends Controller
@@ -111,8 +114,34 @@ class MissingPeopleController extends Controller
             $missing->missing_image = $filename;
         }
         $missing->save();
+
+        $this->sendNotificationToNearestUpazila($missing->id,$request->district_id);
+
         Session::flash('message', 'Missing add successfully!');
         return redirect()->back();
+    }
+
+    public function sendNotificationToNearestUpazila($id,$districtId)
+    {
+        $missingInfo = MissingPeople::where('id',$id)
+            ->select(
+                'missing_peoples.missing_person_name',
+                'missing_peoples.missing_person_age',
+                'missing_peoples.contact_number',
+                'missing_peoples.missing_date'
+            )->first();
+
+        $userInfo = User::where('users.district_id',$districtId)
+            ->where('users.occupation','=','Police')
+            ->select('users.email')->get();
+
+      //  dd($userInfo);
+        foreach ($userInfo as $userMail){
+           // dd($userMail->email);
+            Mail::to($userMail->email)
+                ->queue(new MissingMailToNearestDistrict($missingInfo));
+        }
+
     }
 
     /**
@@ -180,6 +209,7 @@ class MissingPeopleController extends Controller
             $missingById->missing_image = $filename;
         }
         $missingById->save();
+
         Session::flash('message', 'Missing update successfully!');
         return redirect('/missing/people/view');
     }

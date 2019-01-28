@@ -19,8 +19,12 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->tinyInteger('verified')->default(0)->nullabel();
-            $table->string('email_token')->nullable()->nullabel();
-            $table->string('user_role')->nullable()->nullabel();
+            $table->string('email_token')->nullable();
+            $table->string('user_role')->nullable();
+            $table->string('occupation')->nullable();
+            $table->integer('division_id')->nullable();
+            $table->integer('district_id')->nullable();
+            $table->integer('upazila_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

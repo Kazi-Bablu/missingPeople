@@ -20,55 +20,46 @@
     <section class="content">
         <div class="container">
             <div class="btn-group pull-right">
-                <a href="{{url('missing/people/view')}}" class="btn btn-primary btn-flat"><i class="fa fa-list"></i>
+                <a href="{{url('/user/view')}}" class="btn btn-primary btn-flat"><i class="fa fa-list"></i>
                     View Missing</a>
             </div>
             <br>
             <br>
-            <h2>Update Missing</h2>
+            <h2>Update User</h2>
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="col-md-12">
                         {{--<img src="{{ asset('storage/images/'.$query->missing_image) }}"--}}
                         {{--{!! Form::open(['id'=>'form','url'=> 'division/' . $divisionById->id . '/update']) !!}--}}
-                        {!! Form::open(['id'=>'form','url'=> '/missing/people/' . $missingById->id .'/update','files'=>'true']) !!}
+                        {!! Form::open(['id'=>'form','url'=> '/user/' . $userById->id .'/update','files'=>'true']) !!}
                         <div class="col-md-6">
-                            <div class="form-group {{$errors->has('missing_person_name')?'has-error':''}}">
-                                <label>Missing Person Name</label>
-                                <input type="text" name="missing_person_name" class="form-control"
-                                       value="{{$missingById->missing_person_name}}">
-                                <p class="help-block">{{$errors->first('missing_person_name')}}</p>
-                            </div>
-                            <div class="form-group {{$errors->has('missing_person_age')?'has-error':''}}">
-                                <label>Missing Person Age</label>
-                                <input type="number" name="missing_person_age" class="form-control"
-                                       value="{{$missingById->missing_person_age}}">
-                                <p class="help-block">{{$errors->first('missing_person_age')}}</p>
+                            <div class="form-group {{$errors->has('name')?'has-error':''}}">
+                                <label>Name</label>
+                                <input type="text" name="name" class="form-control"
+                                       value="{{$userById->name}}">
+                                <p class="help-block">{{$errors->first('name')}}</p>
                             </div>
 
-                            <div class="form-group {{$errors->has('contact_number')?'has-error':''}}">
-                                <label>Contact Number</label>
-                                <input type="text" name="contact_number" class="form-control"
-                                       value="{{$missingById->contact_number}}">
-                                <p class="help-block">{{$errors->first('contact_number')}}</p>
+                            <div class="form-group {{$errors->has('email')?'has-error':''}}">
+                                <label>Email</label>
+                                <input type="text" name="email" class="form-control"
+                                       value="{{$userById->email}}">
+                                <p class="help-block">{{$errors->first('email')}}</p>
                             </div>
-                            <div class="form-group {{$errors->has('missing_date')?'has-error':''}}">
-                                <label>Missing Date</label>
-                                <input type="datetime-local" name="missing_date" class="form-control"
-                                       value="{{$missingById->missing_date}}">
-                                <p class="help-block">{{$errors->first('missing_date')}}</p>
-                            </div>
-                            <div class="form-group {{$errors->has('missing_person_description')?'has-error':''}}">
-                                <label>Description</label>
-                                <textarea name="missing_person_description" class="form-control"
-                                          rows="5">{{$missingById->missing_person_description}}</textarea>
-                                <p class="help-block">{{$errors->first('missing_person_description')}}</p>
+                            <div class="form-group {{$errors->has('occupation')?'has-error':''}}">
+                                <label>Occupation</label>
+                                <select name="occupation" class="form-control selectpicker"
+                                        data-live-search="true"
+                                        data-size="6"
+                                        title="Select occupation">
+                                    <option value="Police">Police</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <p class="help-block">{{$errors->first('occupation')}}</p>
                             </div>
 
                         </div>
                         <div class="col-md-6">
-
-
                             <div class="form-group {{$errors->has('division_id')?'has-error':''}}">
                                 <label>Division Name</label>
                                 <a href="{{url('division/create')}}" class="pull-right">+ Add New</a>
@@ -114,30 +105,13 @@
                                 <p class="help-block">{{$errors->first('upazila_id')}}</p>
                             </div>
 
-
-                            @if($missingById->missing_image)
-                                <div class="form-group">
-                                    <label>Current Image</label>
-                                    <img src="{{asset('storage/images/'.$missingById->missing_image)}}" class="img-responsive" style="max-height: 150px"
-                                         alt="Image not found">
-                                    <p class="help-block">Uploading new image will replace the existing one.</p>
-                                </div>
-                            @endif
-
-                            <div class="form-group {{$errors->has('missing_image')?'has-error':''}}">
-                                <label for="file">Image</label>
-                                <input type="file" data-show-upload="false" name="missing_image" class="file" id="file"/>
-                                <p class="help-block">{{$errors->first('missing_image')}}</p>
-                            </div>
-
                         </div>
                         <div class="box-footer">
                             <div class="col-md-12">
                                 <button type="reset" value="Reset" class="btn btn-warning pull-left"><i
                                             class="fa fa-eraser"></i> Clear
                                 </button>
-                                <button type="submit" class="btn btn-primary pull-right"><i class="fa fa-plus"></i>Update
-                                    Missing
+                                <button type="submit" class="btn btn-primary pull-right"><i class="fa fa-plus"></i>Update User
                                 </button>
                             </div>
                         </div>
@@ -173,7 +147,7 @@
                 success: function (data) {
                     $('select[name=district_id]').html(data);
                     $('select[name=district_id]').selectpicker('refresh');
-                    $('select[name=district_id]').selectpicker('val', '{{old('division_id') ? old('division_id'):$missingById->division_id}}');
+                    $('select[name=district_id]').selectpicker('val', '{{old('division_id') ? old('division_id'):$userById->division_id}}');
                 },
                 error: function (err) {
                     $('select[name=district_id]').html('<option value="">Failed to retrieve data.</option>');
@@ -182,8 +156,7 @@
             });
         }
 
-        function districtSelectedForUpazilaName(district_id)
-        {
+        function districtSelectedForUpazilaName(district_id) {
             $.ajax({
                 accept: 'application/json',
                 url: '{{url('/districtSelectedForUpazilaName')}}',
@@ -202,10 +175,10 @@
             });
         }
 
-        $('select[name=division_id]').selectpicker('val', '{{old('division_id') ? old('division_id'):$missingById->division_id}}');
-        //divisionSelectedForDistrictName('{{old('division_id') ? old('division_id'):$missingById->division_id}}');
-        $('select[name=district_id]').selectpicker('val', '{{old('district_id') ? old('district_id'):$missingById->district_id}}');
-        $('select[name=upazila_id]').selectpicker('val', '{{old('upazila_id') ? old('upazila_id'):$missingById->upazila_id}}');
+        $('select[name=division_id]').selectpicker('val', '{{old('division_id') ? old('division_id'):$userById->division_id}}');
+        //divisionSelectedForDistrictName('{{old('division_id') ? old('division_id'):$userById->division_id}}');
+        $('select[name=district_id]').selectpicker('val', '{{old('district_id') ? old('district_id'):$userById->district_id}}');
+        $('select[name=upazila_id]').selectpicker('val', '{{old('upazila_id') ? old('upazila_id'):$userById->upazila_id}}');
     </script>
     @if(count($errors) > 0)
         <script type="text/javascript">

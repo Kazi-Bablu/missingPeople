@@ -68,6 +68,10 @@ Route::get('/user/{id}/edit','UserController@edit');
 Route::post('/user/{id}/update','UserController@update');
 Route::get('/user/{id}/delete','UserController@destroy');
 
+/*post approve*/
+Route::get('/missing/post/{id}/approve','MissingPeopleController@approve');
+
+
 Auth::routes();
 Route::get('/verifyemail/{token}', 'Auth\RegisterController@verify');
 Route::get('/home', 'HomeController@index')->name('home');

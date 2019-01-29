@@ -94,6 +94,7 @@ class IndexSearchController extends Controller
             ->join('districts','districts.id','missing_peoples.district_id')
             ->join('upazilas','upazilas.id','missing_peoples.upazila_id')
             ->join('users','users.id','missing_peoples.created_by')
+            ->where('missing_peoples.is_approve','=','Approve')
             ->orderBy('missing_peoples.missing_person_name');
 
         $search_name=$request->input('search_name');

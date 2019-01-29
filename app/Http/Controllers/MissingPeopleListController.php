@@ -21,6 +21,7 @@ class MissingPeopleListController extends Controller
             ->join('districts', 'districts.id', 'missing_peoples.district_id')
             ->join('upazilas', 'upazilas.id', 'missing_peoples.upazila_id')
             ->join('users', 'users.id', 'missing_peoples.created_by')
+            ->where('missing_peoples.is_approve', '=', 'Approve')
             ->select(
                 'missing_peoples.missing_image',
                 'missing_peoples.missing_person_name',
@@ -47,24 +48,25 @@ class MissingPeopleListController extends Controller
         $missingPeoples = MissingPeople::join('divisions', 'divisions.id', 'missing_peoples.division_id')
             ->join('districts', 'districts.id', 'missing_peoples.district_id')
             ->join('upazilas', 'upazilas.id', 'missing_peoples.upazila_id')
-            ->join('users', 'users.id', 'missing_peoples.created_by');
-           // ->orderBy('missing_peoples.missing_person_name');
+            ->join('users', 'users.id', 'missing_peoples.created_by')
+            ->where('missing_peoples.is_approve', '=', 'Approve');
+        // ->orderBy('missing_peoples.missing_person_name');
 
         $division_name = $request->input('division_id');
         $district_name = $request->input('district_id');
         $upazila_name = $request->input('upazila_id');
 
-        if (!empty($division_name) ||!empty($district_name) ||!empty($upazila_name)) {
-            $missingPeoples->where(function ($missingPeoples) use($division_name,$district_name,$upazila_name){
+        if (!empty($division_name) || !empty($district_name) || !empty($upazila_name)) {
+            $missingPeoples->where(function ($missingPeoples) use ($division_name, $district_name, $upazila_name) {
                 $missingPeoples->where('divisions.id', 'LIKE', '%' . $division_name . '%')
                     ->orWhere('districts.id', 'LIKE', '%' . $district_name . '%')
                     ->orWhere('upazilas.id', 'LIKE', '%' . $upazila_name . '%');
             });
-          //  $missingPeoples->where('missing_peoples.missing_person_name', 'LIKE', '%' . $search_name . '%');
+            //  $missingPeoples->where('missing_peoples.missing_person_name', 'LIKE', '%' . $search_name . '%');
         }
         $missingPeoples = $missingPeoples->paginate(5);
 
-        return view('missingList.searchListView', compact('missingPeoples','divisions'));
+        return view('missingList.searchListView', compact('missingPeoples', 'divisions'));
     }
 
     /**

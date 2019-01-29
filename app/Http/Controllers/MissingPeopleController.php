@@ -32,6 +32,7 @@ class MissingPeopleController extends Controller
                     'missing_peoples.missing_person_age',
                     'missing_peoples.contact_number',
                     'missing_peoples.missing_date',
+                    'missing_peoples.is_approve',
                     'divisions.division_name',
                     'districts.district_name',
                     'upazilas.upazila_name',
@@ -44,7 +45,7 @@ class MissingPeopleController extends Controller
                 ->join('divisions', 'divisions.id', 'missing_peoples.division_id')
                 ->join('districts', 'districts.id', 'missing_peoples.district_id')
                 ->join('upazilas', 'upazilas.id', 'missing_peoples.upazila_id')
-                ->where('missing_peoples.created_by', auth()->user()->id())
+                ->where('missing_peoples.created_by', auth()->id())
                 ->select(
                     'missing_peoples.id',
                     'missing_peoples.missing_image',
@@ -53,6 +54,7 @@ class MissingPeopleController extends Controller
                     'missing_peoples.contact_number',
                     'missing_peoples.missing_date',
                     'divisions.division_name',
+                    'missing_peoples.is_approve',
                     'districts.district_name',
                     'upazilas.upazila_name',
                     'missing_peoples.missing_person_description',
@@ -100,6 +102,7 @@ class MissingPeopleController extends Controller
         $missing->missing_person_age = $request->missing_person_age;
         $missing->contact_number = $request->contact_number;
         $missing->missing_date = $request->missing_date;
+        $missing->is_approve='Pending';
         $missing->division_id = $request->division_id;
         $missing->district_id = $request->district_id;
         $missing->upazila_id = $request->upazila_id;
@@ -194,6 +197,7 @@ class MissingPeopleController extends Controller
         $missingById->missing_person_name = $request->missing_person_name;
         $missingById->missing_person_age = $request->missing_person_age;
         $missingById->contact_number = $request->contact_number;
+        $missingById->is_approve='Pending';
         $missingById->missing_date = $request->missing_date;
         $missingById->division_id = $request->division_id;
         $missingById->district_id = $request->district_id;
@@ -229,6 +233,9 @@ class MissingPeopleController extends Controller
 
     }
 
+    /**
+     * @param Request $request
+     */
     public function divisionSelectedForDistrictName(Request $request)
     {
         $districtById = District::where('division_id', $request->division_id)
@@ -246,6 +253,9 @@ class MissingPeopleController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     */
     public function districtSelectedForUpazilaName(Request $request)
     {
         $upazilaById = Upazila::where('district_id', $request->district_id)
@@ -260,5 +270,15 @@ class MissingPeopleController extends Controller
         } else {
             echo '<option value="">No upazila found.</option>';
         }
+    }
+
+    public function approve($id)
+    {
+        $missingById = MissingPeople::find($id);
+        $missingById->is_approve='Approve';
+        $missingById->save();
+        Session::flash('message', 'Missing post approve successfully!');
+        return redirect('/missing/people/view');
+       // dd($missingById);
     }
 }

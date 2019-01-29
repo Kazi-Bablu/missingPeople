@@ -18,6 +18,7 @@ class CreateMissingPeoplesTable extends Migration
             $table->text('missing_image')->nullable();
             $table->string('missing_person_name')->nullable();
             $table->string('missing_person_age')->nullable();
+            $table->string('is_approve')->nullable();
             $table->integer('contact_number')->nullable();
             $table->dateTime('missing_date')->nullable();
             $table->integer('division_id')->nullable();

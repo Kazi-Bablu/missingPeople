@@ -34,6 +34,7 @@
                     <th>Upazila</th>
                     <th>Description</th>
                     <th>Image</th>
+                    <th>Post Status</th>
                     <th>Post Creator</th>
                     <th>Action</th>
                 </tr>
@@ -51,12 +52,24 @@
                         <td><img class="img-responsive"
                                  src="{{ asset('storage/images/'.$missingPeople->missing_image) }}"/></td>
                         {{--<td>{{$missingPeople->missing_image}}</td>--}}
+                        <td>{{$missingPeople->is_approve}}</td>
                         <td>{{$missingPeople->name}}</td>
                         <td>
                             <div class="btn btn-default">
                                 <a href="{{ url('/missing/people',[$missingPeople->id,'edit']) }}"><i
                                             class="fas fa-edit"></i> Edit</a>
                             </div>
+                            @if(auth()->user()->role_name=='Admin')
+                            <div class="btn btn-info" id="approve">
+                                <a href="{{ url('/missing/post',[$missingPeople->id,'approve']) }}">
+                                    <i class="fas fa-check-circle"></i></i> Approve</a>
+                            </div>
+                            @endif
+
+                            {{--<div class="btn btn-info" onclick="confirmApprove('.$missingPeople->id.')">--}}
+                                {{--<a href="{{ url('/missing/post',[$missingPeople->id,'approve']) }}">--}}
+                                    {{--<i class="fas fa-check-circle"></i></i> Approve</a>--}}
+                            {{--</div>--}}
 
                             <div class="btn btn-danger">
                                 <a class="delete_link"
@@ -76,5 +89,10 @@
 @endsection
 
 @section('js')
+    <script type="text/javascript">
+        $("#approve").click(function(){
+            alert("Are you sure ?you want to approve .");
+        });
 
+    </script>
 @endsection

@@ -277,8 +277,10 @@ class MissingPeopleController extends Controller
         $missingById = MissingPeople::find($id);
         $missingById->is_approve='Approve';
         $missingById->save();
+
+        $this->sendNotificationToNearestUpazila($missingById->id,$missingById->district_id);
+
         Session::flash('message', 'Missing post approve successfully!');
         return redirect('/missing/people/view');
-       // dd($missingById);
     }
 }
